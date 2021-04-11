@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { Container, Divider, Header } from "semantic-ui-react";
+import AddItem from "./components/AddItem";
+import Itemlist from "./components/Itemlist";
+import "./App.css";
 
-function App() {
+const App = () => {
+  const [items, setItems] = useState([]);
+
+  const handleSubmit = (itemToAdd) => {
+    setItems(items.concat(itemToAdd));
+  };
+
+  const handleRemove = (item) => {
+    setItems(items.filter((i) => i.name !== item.name));
+  };
+
+  const handleCheckChange = (item) => {
+    const updatedItem = { ...item, checked: !item.checked };
+    setItems(items.map((i) => (i.name === item.name ? updatedItem : i)));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container textAlign="center">
+      <Header as="h1" id="header">
+        Shopping list
+      </Header>
+      <Divider />
+      <AddItem handleSubmit={handleSubmit} />
+      <Itemlist
+        items={items}
+        handleRemove={handleRemove}
+        handleCheckChange={handleCheckChange}
+      />
+    </Container>
   );
-}
+};
 
 export default App;
