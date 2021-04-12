@@ -3,6 +3,9 @@ import { Segment } from "semantic-ui-react";
 import Item from "./Item";
 
 const Itemlist = ({ items, handleRemove, handleCheckChange }) => {
+  if (items.length === 0) {
+    return null;
+  }
   return (
     <Segment.Group piled>
       {items.map((item, index) => (

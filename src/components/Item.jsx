@@ -5,14 +5,19 @@ import "../App.css";
 const Item = ({ item, handleRemove, handleCheckChange }) => {
   return (
     <Segment>
-      <Grid container>
-        <Grid.Column>
+      <Grid
+        columns="equal"
+        container
+        padded="horizontally"
+        verticalAlign="middle"
+      >
+        <Grid.Column width="1">
           <Checkbox onClick={() => handleCheckChange(item)} />
         </Grid.Column>
-        <Grid.Column>
+        <Grid.Column textAlign="left">
           <p className={item.checked ? "strikethrough" : null}>{item.name}</p>
         </Grid.Column>
-        <Grid.Column floated="right">
+        <Grid.Column width="1">
           <div className="cursorPointer" onClick={() => handleRemove(item)}>
             <Icon name="trash alternate outline" />
           </div>
