@@ -20,6 +20,11 @@ const App = () => {
     setItems(items.map((i) => (i.name === item.name ? updatedItem : i)));
   };
 
+  const handleEdit = (item, newName) => {
+    const updatedItem = { ...item, name: newName };
+    setItems(items.map((i) => (i.name === item.name ? updatedItem : i)));
+  };
+
   return (
     <Container textAlign="center">
       <Header as="h1" id="header">
@@ -31,6 +36,7 @@ const App = () => {
         items={items}
         handleRemove={handleRemove}
         handleCheckChange={handleCheckChange}
+        handleEdit={handleEdit}
       />
     </Container>
   );

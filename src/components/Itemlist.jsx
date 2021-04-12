@@ -2,7 +2,7 @@ import React from "react";
 import { Segment } from "semantic-ui-react";
 import Item from "./Item";
 
-const Itemlist = ({ items, handleRemove, handleCheckChange }) => {
+const Itemlist = ({ items, handleRemove, handleCheckChange, handleEdit }) => {
   if (items.length === 0) {
     return null;
   }
@@ -14,6 +14,7 @@ const Itemlist = ({ items, handleRemove, handleCheckChange }) => {
           item={item}
           handleRemove={handleRemove}
           handleCheckChange={handleCheckChange}
+          handleEdit={handleEdit}
         />
       ))}
     </Segment.Group>
