@@ -11,3 +11,108 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+#header {
+  padding-top: 1em;
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+.strikethrough {
+  text-decoration: line-through;
+}
+
+.quantityInput {
+  width: 5em;
+}
+
+.item-name {
+  cursor: pointer;
+  padding-left: 10px;
+}
+
+.list-item {
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+
+
+
+/* * {
+  font-size: 36px;
+} */
+
+/* body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  color: white;
+} */
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.app-background {
+  background-color: #536162;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+.main-container {
+  background-color: #f3f4ed;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 10px 10px 26px 0px rgba(0, 0, 0, 0.35);
+}
+
+input:focus {
+  outline: 0;
+  /* max-height: 30px; */
+}
+
+.item-list {
+  display: flex;
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
+  border: 2px solid #000000;
+  border-radius: 20px;
+  font-size: 16px;
+  /* color: #ec645b; */
+  width: 70px;
+  max-height: 30px;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.button-plus {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  /* color: #ec645b; */
+}
+.button-minus {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-left: 3px;
+  /* color: #ec645b; */
+}
+button:focus {
+  outline: 0;
+}
+
+.edit-and-remove-buttons {
+  margin-left: auto;
+}
+

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Divider, Header } from "semantic-ui-react";
 import AddItem from "./components/AddItem";
 import Itemlist from "./components/Itemlist";
-import "./App.css";
+import "./index.css";
 
 const App = () => {
   const [items, setItems] = useState([]);
@@ -25,20 +25,28 @@ const App = () => {
     setItems(items.map((i) => (i.name === item.name ? updatedItem : i)));
   };
 
+  const handleQuantityChange = (item, newQuantity) => {
+    const updatedItem = { ...item, quantity: newQuantity };
+    setItems(items.map((i) => (i.name === item.name ? updatedItem : i)));
+  };
+
   return (
-    <Container textAlign="center">
-      <Header as="h1" id="header">
-        Shopping list
-      </Header>
-      <Divider />
-      <AddItem handleSubmit={handleSubmit} />
-      <Itemlist
-        items={items}
-        handleRemove={handleRemove}
-        handleCheckChange={handleCheckChange}
-        handleEdit={handleEdit}
-      />
-    </Container>
+    <div className="app-background">
+      <Container className="main-container" textAlign="center">
+        <Header as="h1" id="header">
+          Shopping list
+        </Header>
+        <Divider />
+        <AddItem handleSubmit={handleSubmit} />
+        <Itemlist
+          items={items}
+          handleRemove={handleRemove}
+          handleCheckChange={handleCheckChange}
+          handleEdit={handleEdit}
+          handleQuantityChange={handleQuantityChange}
+        />
+      </Container>
+    </div>
   );
 };
 
