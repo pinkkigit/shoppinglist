@@ -24,7 +24,7 @@ const AddItem = ({ handleSubmit }) => {
   return (
     <Form onSubmit={handleFormSubmit}>
       <Input
-        className="quantityInput"
+        id="quantity-input"
         type="number"
         min="0"
         name="quantity"
@@ -32,13 +32,14 @@ const AddItem = ({ handleSubmit }) => {
         onChange={handleQuantityChange}
       />
       <Input
+        id="name-input"
         type="text"
         name="name"
         placeholder="Add item..."
         onChange={handleValueChange}
         value={value}
       />
-      <Button primary type="submit" value="Submit">
+      <Button id="add-button" type="submit" value="Submit">
         Add
       </Button>
     </Form>
