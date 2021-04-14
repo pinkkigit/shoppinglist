@@ -26,7 +26,7 @@ const AddItem = ({ handleSubmit }) => {
       <Input
         id="quantity-input"
         type="number"
-        min="0"
+        min="1"
         name="quantity"
         value={quantityValue}
         onChange={handleQuantityChange}

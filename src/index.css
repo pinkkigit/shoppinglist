@@ -4,11 +4,6 @@
     sans-serif;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
 .app-background {
   background-color: #536162;
   justify-content: center;
@@ -18,7 +13,9 @@ code {
 
 .main-container {
   background-color: #f3f4ed;
-  border-radius: 5px;
+  /* border-radius: 5px; */
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
   padding: 20px;
   box-shadow: 10px 10px 26px 0px rgba(0, 0, 0, 0.35);
 }
@@ -38,7 +35,7 @@ code {
 
 #quantity-input {
   width: 5em;
-  border: transparent;
+  border-color: rgba(0, 0, 0, 0.35);
   background-color: #f3f4ed;
   font-weight: bold;
 }
@@ -104,3 +101,7 @@ code {
   align-self: center;
 }
 
+#delete-checked-button {
+  background-color: #c06014;
+  color: white;
+}

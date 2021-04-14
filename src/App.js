@@ -15,13 +15,16 @@ const App = () => {
     setItems(items.filter((i) => i.name !== item.name));
   };
 
-  const handleCheckChange = (item) => {
-    const updatedItem = { ...item, checked: !item.checked };
-    setItems(items.map((i) => (i.name === item.name ? updatedItem : i)));
+  const handleRemoveAll = () => {
+    setItems([]);
   };
 
-  const handleEdit = (item, newName) => {
-    const updatedItem = { ...item, name: newName };
+  const handleRemoveChecked = () => {
+    setItems(items.filter((i) => !i.checked));
+  };
+
+  const handleNameClick = (item) => {
+    const updatedItem = { ...item, checked: !item.checked };
     setItems(items.map((i) => (i.name === item.name ? updatedItem : i)));
   };
 
@@ -41,9 +44,10 @@ const App = () => {
         <Itemlist
           items={items}
           handleRemove={handleRemove}
-          handleCheckChange={handleCheckChange}
-          handleEdit={handleEdit}
+          handleNameClick={handleNameClick}
           handleQuantityChange={handleQuantityChange}
+          handleRemoveAll={handleRemoveAll}
+          handleRemoveChecked={handleRemoveChecked}
         />
       </Container>
     </div>
