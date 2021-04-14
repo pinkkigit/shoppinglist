@@ -29,6 +29,9 @@ const App = () => {
   };
 
   const handleQuantityChange = (item, newQuantity) => {
+    if (newQuantity < 1) {
+      return null;
+    }
     const updatedItem = { ...item, quantity: newQuantity };
     setItems(items.map((i) => (i.name === item.name ? updatedItem : i)));
   };
