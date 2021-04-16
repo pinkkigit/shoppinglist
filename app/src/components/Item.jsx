@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Icon, List } from "semantic-ui-react";
 import "../index.css";
 import Quantity from "./Quantity";

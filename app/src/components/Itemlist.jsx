@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Icon, List, Segment } from "semantic-ui-react";
+import { Button, Icon, List } from "semantic-ui-react";
 import Item from "./Item";
 
 const Itemlist = ({
