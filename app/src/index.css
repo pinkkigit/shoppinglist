@@ -28,7 +28,7 @@
 
 .frontpage-top {
   background-color: #536162;
-  min-height: 100px;
+  min-height: 150px;
   /* margin-top: auto; */
 }
 
@@ -69,9 +69,17 @@
   color: rgba(0, 0, 0, 0.5);
 }
 
-#add-button {
+#primary-button {
   background-color: #424642;
   color:white;
+}
+
+#login-inputs {
+  margin: auto;
+  max-width: 200px;
+  border-color: rgba(0, 0, 0, 0.35);
+  background-color: #f3f4ed;
+  font-weight: bold;
 }
 
 .item-list {

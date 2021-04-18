@@ -5,58 +5,37 @@ import FrontPage from "./components/FrontPage";
 import Itemlist from "./components/Itemlist";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "./index.css";
+import SignUpForm from "./components/SignUpForm";
+import LoginForm from "./components/LoginForm";
+import itemService from "./services/Items";
 
 const App = () => {
   const [items, setItems] = useState([]);
-
-  const handleSubmit = (itemToAdd) => {
-    setItems(items.concat(itemToAdd));
-  };
-
-  const handleRemove = (item) => {
-    setItems(items.filter((i) => i.name !== item.name));
-  };
-
-  const handleRemoveAll = () => {
-    setItems([]);
-  };
-
-  const handleRemoveChecked = () => {
-    setItems(items.filter((i) => !i.checked));
-  };
-
-  const handleNameClick = (item) => {
-    const updatedItem = { ...item, checked: !item.checked };
-    setItems(items.map((i) => (i.name === item.name ? updatedItem : i)));
-  };
-
-  const handleQuantityChange = (item, newQuantity) => {
-    if (newQuantity < 1) {
-      return null;
-    }
-    const updatedItem = { ...item, quantity: newQuantity };
-    setItems(items.map((i) => (i.name === item.name ? updatedItem : i)));
-  };
+  const [user, setUser] = useState(null);
 
   return (
     <div className="app-background">
       <Router>
         <Switch>
-          <Route path="/lists">
+          <Route path="/lists/:id">
             <Container className="main-container" textAlign="center">
               <Header as="h1" id="header">
                 Shopping list
               </Header>
               <Divider />
-              <AddItem handleSubmit={handleSubmit} />
-              <Itemlist
-                items={items}
-                handleRemove={handleRemove}
-                handleNameClick={handleNameClick}
-                handleQuantityChange={handleQuantityChange}
-                handleRemoveAll={handleRemoveAll}
-                handleRemoveChecked={handleRemoveChecked}
-              />
+              <Itemlist />
+            </Container>
+          </Route>
+          <Route path="/signup">
+            <div className="frontpage-top" />
+            <Container className="frontpage" textAlign="center" text>
+              <SignUpForm />
+            </Container>
+          </Route>
+          <Route path="/login">
+            <div className="frontpage-top" />
+            <Container className="frontpage" textAlign="center" text>
+              <LoginForm />
             </Container>
           </Route>
           <Route path="/">
