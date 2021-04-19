@@ -17,12 +17,12 @@ const Itemlist = () => {
       const lists = await listService.getAll();
       const thisList = lists.find((list) => list.id === id);
       if (!thisList) {
-        await listService.create({ id: id });
+        await listService.create({ id: id, items: [] });
       }
 
       const allItems = await itemService.getAll(id);
-      if (allItems.items) {
-        setItems(allItems.items);
+      if (allItems) {
+        setItems(allItems);
       }
     } catch (error) {
       console.log("error loading items", error);
@@ -32,7 +32,7 @@ const Itemlist = () => {
   const handleSubmit = async (itemToAdd) => {
     const newItems = items.concat(itemToAdd);
     try {
-      await itemService.update(id, newItems);
+      await itemService.create(id, itemToAdd);
       setItems(newItems);
     } catch (error) {
       console.log("error", error);
@@ -42,7 +42,7 @@ const Itemlist = () => {
   const handleRemove = async (item) => {
     const newItems = items.filter((i) => i.id !== item.id);
     try {
-      await itemService.update(id, newItems);
+      await itemService.remove(id, item.id);
       setItems(newItems);
     } catch (error) {
       console.log("error", error);
@@ -51,7 +51,7 @@ const Itemlist = () => {
 
   const handleRemoveAll = async () => {
     try {
-      await itemService.update(id, []);
+      await itemService.removeAll(id);
       setItems([]);
     } catch (error) {
       console.log("error", error);
@@ -59,20 +59,40 @@ const Itemlist = () => {
   };
 
   const handleRemoveChecked = () => {
-    setItems(items.filter((i) => !i.checked));
+    try {
+      items
+        .filter((item) => item.checked)
+        .map((i) => itemService.remove(id, i.id));
+      setItems(items.filter((i) => !i.checked));
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
-  const handleNameClick = (item) => {
-    const updatedItem = { ...item, checked: !item.checked };
-    setItems(items.map((i) => (i.name === item.name ? updatedItem : i)));
+  const handleNameClick = async (item) => {
+    try {
+      console.log(item.id);
+      const updatedItem = { ...item, checked: !item.checked };
+      await itemService.update(id, item.id, updatedItem);
+      setItems(items.map((i) => (i.id === item.id ? updatedItem : i)));
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
-  const handleQuantityChange = (item, newQuantity) => {
+  const handleQuantityChange = async (item, newQuantity) => {
     if (newQuantity < 1) {
       return null;
     }
-    const updatedItem = { ...item, quantity: newQuantity };
-    setItems(items.map((i) => (i.name === item.name ? updatedItem : i)));
+
+    try {
+      console.log(item.id);
+      const updatedItem = { ...item, quantity: newQuantity };
+      await itemService.update(id, item.id, updatedItem);
+      setItems(items.map((i) => (i.name === item.name ? updatedItem : i)));
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   // if (items.length === 0) {
