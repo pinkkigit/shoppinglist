@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Button, Form, Header, Input } from "semantic-ui-react";
 import userService from "../services/Users";
 import Alert from "./Alert";
-import { v4 as uuid } from "uuid";
 
 const SignUpForm = () => {
   const [username, setUsername] = useState("");
@@ -19,7 +18,7 @@ const SignUpForm = () => {
     }
 
     try {
-      await userService.create({ username, password, id: uuid() });
+      await userService.create({ username, password });
     } catch (error) {
       console.log("error", error);
     }

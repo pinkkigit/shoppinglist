@@ -15,12 +15,14 @@ const Itemlist = () => {
   useEffect(async () => {
     try {
       const lists = await listService.getAll();
-      const thisList = lists.find((list) => list.id === id);
+      const thisList = lists.find((list) => list.listId === id);
+      console.log(thisList);
       if (!thisList) {
-        await listService.create({ id: id, items: [] });
+        await listService.create({ listId: id, items: [] });
       }
 
       const allItems = await itemService.getAll(id);
+      console.log(allItems);
       if (allItems) {
         setItems(allItems);
       }
@@ -30,10 +32,9 @@ const Itemlist = () => {
   }, []);
 
   const handleSubmit = async (itemToAdd) => {
-    const newItems = items.concat(itemToAdd);
     try {
-      await itemService.create(id, itemToAdd);
-      setItems(newItems);
+      const returnedList = await itemService.create(id, itemToAdd);
+      setItems(returnedList.items);
     } catch (error) {
       console.log("error", error);
     }
@@ -73,8 +74,8 @@ const Itemlist = () => {
     try {
       console.log(item.id);
       const updatedItem = { ...item, checked: !item.checked };
-      await itemService.update(id, item.id, updatedItem);
-      setItems(items.map((i) => (i.id === item.id ? updatedItem : i)));
+      const returnedList = await itemService.update(id, item.id, updatedItem);
+      setItems(returnedList.items);
     } catch (error) {
       console.log("error", error);
     }
@@ -86,10 +87,9 @@ const Itemlist = () => {
     }
 
     try {
-      console.log(item.id);
       const updatedItem = { ...item, quantity: newQuantity };
-      await itemService.update(id, item.id, updatedItem);
-      setItems(items.map((i) => (i.name === item.name ? updatedItem : i)));
+      const returnedList = await itemService.update(id, item.id, updatedItem);
+      setItems(returnedList.items);
     } catch (error) {
       console.log("error", error);
     }

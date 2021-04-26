@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button, Form, Input } from "semantic-ui-react";
 import "../index.css";
-import { v4 as uuid } from "uuid";
 
 const AddItem = ({ handleSubmit }) => {
   const [value, setValue] = useState("");
@@ -25,7 +24,6 @@ const AddItem = ({ handleSubmit }) => {
       name: value,
       quantity: quantityValue,
       checked: false,
-      id: uuid(),
     });
     setValue("");
     setQuantityValue(1);
