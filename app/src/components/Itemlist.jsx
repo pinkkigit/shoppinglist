@@ -41,8 +41,8 @@ const Itemlist = () => {
   };
 
   const handleRemove = async (item) => {
-    const newItems = items.filter((i) => i.id !== item.id);
     try {
+      const newItems = items.filter((i) => i.id !== item.id);
       await itemService.remove(id, item.id);
       setItems(newItems);
     } catch (error) {
@@ -59,11 +59,9 @@ const Itemlist = () => {
     }
   };
 
-  const handleRemoveChecked = () => {
+  const handleRemoveChecked = async () => {
     try {
-      items
-        .filter((item) => item.checked)
-        .map((i) => itemService.remove(id, i.id));
+      await itemService.removeMany(id);
       setItems(items.filter((i) => !i.checked));
     } catch (error) {
       console.log("error", error);
@@ -95,9 +93,6 @@ const Itemlist = () => {
     }
   };
 
-  // if (items.length === 0) {
-  //   return null;
-  // }
   return (
     <>
       <AddItem handleSubmit={handleSubmit} />

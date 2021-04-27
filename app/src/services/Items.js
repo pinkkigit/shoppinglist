@@ -21,9 +21,14 @@ const remove = (id, itemId) => {
   return request.then((response) => response.data);
 };
 
+const removeMany = (id) => {
+  const request = axios.delete(`${baseUrl}/${id}/manyItems/`);
+  return request.then((response) => response.data);
+};
+
 const removeAll = (id) => {
   const request = axios.delete(`${baseUrl}/${id}/items/`);
   return request.then((response) => response.data);
 };
 
-export default { getAll, create, update, remove, removeAll };
+export default { getAll, create, update, remove, removeAll, removeMany };
