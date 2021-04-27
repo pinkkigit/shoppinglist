@@ -1,59 +1,34 @@
-const itemsRouter = require('express').Router()
+const listsRouter = require('express').Router()
+const List = require("../models/list");
 
-itemsRouter.get('/api/lists/:id/items', (request, response) => {
+listsRouter.get('/', async (request, response) => {
+  const lists = await List.find({})
+  response.json(lists.map((u) => u.toJSON()));
+})
+
+listsRouter.get('/:id', async (request, response) => {
   const id = request.params.id
-  const list = lists.find(list => list.id === id)
+  const list = await List.find(list => list.id === id)
   if(list) {
-    response.json(list.items)
+    response.json(list)
   } else {
     response.status(404).end()
   }
 })
-  
-itemsRouter.post('/api/lists/:id/items', (request, response) => {
+
+listsRouter.delete('/:id', async (request, response) => {
   const id = request.params.id
-  const list = lists.find(list => list.id === id)
-  const item = request.body
-  list.items = list.items.concat(item)
-  
-  lists = lists.map(l => l.id === id ? list : l)
-  response.json(lists)
-})
-  
-itemsRouter.delete('/api/lists/:id/items/:itemId', (request, response) => {
-  const id = request.params.id
-  const list = lists.find(list => list.id === id)
-  const itemId = request.params.itemId
-  list.items = list.items.filter(l => l.id !== itemId)
-  lists = lists.map(l => l.id === id ? list : l)
-  
+  await List.filter(list => list.id !== id)
+
   response.status(204).end()
 })
-  
-itemsRouter.delete('/api/lists/:id/items', (request, response) => {
-  const id = request.params.id
-  const list = lists.find(list => list.id === id)
-  list.items = []
-  lists = lists.map(l => l.id === id ? list : l)
-  
-  response.status(204).end()
+
+listsRouter.post('/', async (request, response) => {
+  const list = new List({
+    ...request.body
+  })
+  const newList = await list.save()
+  response.json(newList)
 })
-  
-itemsRouter.put('/api/lists/:id/items/:itemId', (request, response) => {
-  const body = request.body
-  const id = request.params.id
-  const itemId = request.params.itemId
-  const list = lists.find(list => list.id === id)
-  
-  const item = {
-    name: body.name,
-    quantity: body.quantity,
-    checked: body.checked,
-    id: itemId
-  }
-  
-  list.items = list.items.map(i => i.id === itemId ? item : i)
-  lists = lists.map(l => l.id === id ? list : l)
-  
-  response.json(item);
-})
+
+module.exports = listsRouter;
