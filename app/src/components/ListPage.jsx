@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Divider, Form, Header, Icon, Input } from "semantic-ui-react";
 import Itemlist from "./Itemlist";
 import listService from "../services/Lists";
@@ -10,6 +10,11 @@ const ListPage = () => {
 
   const match = useRouteMatch("/lists/:id");
   const id = match.params.id;
+
+  useEffect(async () => {
+    const list = await listService.getOne(id);
+    setListName(list.name);
+  }, []);
 
   const handleNameChange = async () => {
     setIsChangingName(!isChangingName);
