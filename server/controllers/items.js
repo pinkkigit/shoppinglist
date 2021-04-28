@@ -1,6 +1,5 @@
 const itemsRouter = require('express').Router()
 const List = require("../models/list");
-const Item = require("../models/item");
 const logger = require("../utils/logger")
 
 itemsRouter.get('/:id/items', async (request, response) => {
@@ -17,9 +16,9 @@ itemsRouter.post('/:id/items', async (request, response) => {
   const id = request.params.id
   const list = await List.findOne({listId: id})
 
-  const item = new Item({
+  const item = {
     ...request.body
-  })
+  }
   list.items = list.items.concat(item)
 
   const updatedList = await list.save()

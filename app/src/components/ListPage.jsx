@@ -1,13 +1,32 @@
 import React, { useState } from "react";
 import { Button, Divider, Form, Header, Icon, Input } from "semantic-ui-react";
 import Itemlist from "./Itemlist";
+import listService from "../services/Lists";
+import { useRouteMatch } from "react-router";
 
 const ListPage = () => {
   const [isChangingName, setIsChangingName] = useState(false);
   const [listName, setListName] = useState("Shopping list");
 
-  const handleNameChange = () => {
+  const match = useRouteMatch("/lists/:id");
+  const id = match.params.id;
+
+  const handleNameChange = async () => {
     setIsChangingName(!isChangingName);
+
+    if (isChangingName) {
+      try {
+        const list = await listService.getOne(id);
+        const newList = {
+          ...list,
+          name: listName,
+        };
+
+        await listService.update(id, newList);
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
   };
 
   return (
@@ -16,7 +35,6 @@ const ListPage = () => {
         {isChangingName ? (
           <Form onSubmit={handleNameChange} className="header-edit-div">
             <Input
-              multiline
               autoFocus
               id="header-edit"
               type="text"

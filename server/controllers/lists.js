@@ -1,5 +1,6 @@
 const listsRouter = require('express').Router()
 const List = require("../models/list");
+const logger = require("../utils/logger")
 
 listsRouter.get('/', async (request, response) => {
   const lists = await List.find({})
@@ -8,7 +9,7 @@ listsRouter.get('/', async (request, response) => {
 
 listsRouter.get('/:id', async (request, response) => {
   const id = request.params.id
-  const list = await List.find(list => list.id === id)
+  const list = await List.findOne({listId: id})
   if(list) {
     response.json(list)
   } else {
@@ -18,7 +19,7 @@ listsRouter.get('/:id', async (request, response) => {
 
 listsRouter.delete('/:id', async (request, response) => {
   const id = request.params.id
-  await List.filter(list => list.id !== id)
+  await List.filter(list => list.listId !== id)
 
   response.status(204).end()
 })
@@ -29,6 +30,18 @@ listsRouter.post('/', async (request, response) => {
   })
   const newList = await list.save()
   response.json(newList)
+})
+
+listsRouter.put('/:id', async (request, response) => {
+  try {
+    const id = request.params.id
+    const list = await List.findOneAndUpdate({listId: id}, {name: request.body.name})
+  
+    response.json(list);
+
+  } catch(error) {
+    logger.error(error)
+  }
 })
 
 module.exports = listsRouter;

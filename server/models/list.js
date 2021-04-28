@@ -22,6 +22,9 @@ const itemSchema = mongoose.Schema({
 })
 
 const listSchema = mongoose.Schema({
+  name: {
+    type: String,
+  },
   items: [itemSchema],
   listId: {
     type: String
