@@ -6,14 +6,18 @@ import { useRouteMatch } from "react-router";
 
 const ListPage = () => {
   const [isChangingName, setIsChangingName] = useState(false);
-  const [listName, setListName] = useState("Shopping list");
+  const [listName, setListName] = useState("");
 
   const match = useRouteMatch("/lists/:id");
   const id = match.params.id;
 
   useEffect(async () => {
     const list = await listService.getOne(id);
-    setListName(list.name);
+    if (list.name) {
+      setListName(list.name);
+    } else {
+      setListName("Shopping list");
+    }
   }, []);
 
   const handleNameChange = async () => {
