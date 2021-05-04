@@ -35,11 +35,14 @@ const FrontPage = ({ handleLogOut }) => {
             </Link>
           </div>
           {lists.length > 0 && (
-            <List divided relaxed>
-              {lists.map((list) => (
-                <UserListItem key={list.listId} list={list} />
-              ))}
-            </List>
+            <>
+              <Header as="h2">My lists</Header>
+              <List celled relaxed>
+                {lists.map((list) => (
+                  <UserListItem key={list.listId} list={list} />
+                ))}
+              </List>
+            </>
           )}
           <div>
             <Button id="frontpage-buttons" compact onClick={handleLogOut}>

@@ -26,6 +26,14 @@
   box-shadow: 10px 10px 26px 0px rgba(0, 0, 0, 0.35);
 }
 
+.user-frontpage {
+  background-color: #F8ECC2;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 20px;
+  box-shadow: 10px 10px 26px 0px rgba(0, 0, 0, 0.35);
+}
+
 .frontpage-top {
   background-color: #536162;
   min-height: 150px;

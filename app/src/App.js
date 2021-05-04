@@ -51,8 +51,12 @@ const App = () => {
               </Container>
             </Route>
             <Route path="/">
-              <div className="frontpage-top" />
-              <Container className="frontpage" textAlign="center" text>
+              {!user && <div className="frontpage-top" />}
+              <Container
+                className={user ? "user-frontpage" : "frontpage"}
+                textAlign="center"
+                text
+              >
                 <FrontPage handleLogOut={handleLogOut} />
               </Container>
             </Route>
