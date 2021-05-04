@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Form, Header, Input } from "semantic-ui-react";
 import userService from "../services/Users";
+import useSignIn from "../hooks/useSignIn";
 import Alert from "./Alert";
+import { useHistory } from "react-router";
+import AuthStorageContext from "../contexts/AuthStorageContext";
 
 const SignUpForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
+
+  const currentUser = useContext(AuthStorageContext);
+  const history = useHistory();
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -19,13 +25,21 @@ const SignUpForm = () => {
 
     try {
       await userService.create({ username, password });
+      const user = await useSignIn({ username, password });
+      currentUser.setCurrentUser(user);
+      history.push("/");
+      console.log("sign up successful", user);
     } catch (error) {
-      console.log("error", error);
-    }
+      console.log(error);
+      setMessage("Username taken");
+      setUsername("");
+      setPassword("");
+      setConfirmPassword("");
 
-    setUsername("");
-    setPassword("");
-    setConfirmPassword("");
+      setTimeout(() => {
+        setMessage("");
+      }, 5000);
+    }
   };
   return (
     <>

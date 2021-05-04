@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Divider, Form, Header, Icon, Input } from "semantic-ui-react";
 import Itemlist from "./Itemlist";
 import listService from "../services/Lists";
 import itemService from "../services/Items";
+import userService from "../services/Users";
 import { useRouteMatch } from "react-router";
+import AuthStorageContext from "../contexts/AuthStorageContext";
 
 const ListPage = () => {
   const [isChangingName, setIsChangingName] = useState(false);
   const [listName, setListName] = useState("");
   const [items, setItems] = useState([]);
+
+  const currentUser = useContext(AuthStorageContext);
 
   const match = useRouteMatch("/lists/:id");
   const id = match.params.id;
@@ -16,9 +20,13 @@ const ListPage = () => {
   useEffect(async () => {
     try {
       const lists = await listService.getAll();
-      const thisList = lists.find((list) => list.listId === id);
+      let thisList = lists.find((list) => list.listId === id);
       if (!thisList) {
-        await listService.create({ listId: id, items: [] });
+        thisList = await listService.create({
+          listId: id,
+          items: [],
+          name: "Shopping list",
+        });
         setListName("Shopping list");
       } else {
         setListName(thisList.name);
@@ -28,10 +36,32 @@ const ListPage = () => {
       if (allItems) {
         setItems(allItems);
       }
+      addListToUser(thisList._id);
     } catch (error) {
       console.log("error loading items", error);
     }
   }, []);
+
+  const addListToUser = async (id) => {
+    if (currentUser.user) {
+      const user = await userService.getOne(currentUser.user.id);
+
+      const userHasList = user.lists.includes(id);
+      if (!userHasList) {
+        const newLists = user.lists.concat(id);
+        const newUser = {
+          username: currentUser.user.username,
+          id: currentUser.user.id,
+          lists: newLists,
+        };
+        const updatedUser = await userService.update(
+          currentUser.user.id,
+          newUser
+        );
+        console.log(updatedUser);
+      }
+    }
+  };
 
   const handleSubmit = async (itemToAdd) => {
     try {

@@ -1,17 +1,29 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Form, Header, Input, Label } from "semantic-ui-react";
 import userService from "../services/Users";
+import loginService from "../services/Login";
+import useSignIn from "../hooks/useSignIn";
+import AuthStorageContext from "../contexts/AuthStorageContext";
+import { useHistory } from "react-router";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const currentUser = useContext(AuthStorageContext);
+  const history = useHistory();
+
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    console.log("login");
-
-    setUsername("");
-    setPassword("");
+    try {
+      const user = await useSignIn({ username, password });
+      currentUser.setCurrentUser(user);
+      setUsername("");
+      setPassword("");
+      history.push("/");
+    } catch (error) {
+      console.log("wrong credentials");
+    }
   };
   return (
     <>

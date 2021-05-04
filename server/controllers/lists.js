@@ -13,7 +13,6 @@ listsRouter.get('/:id', async (request, response) => {
   if(list) {
     response.json(list)
   } else {
-    console.log('ei löytyny')
     response.status(404).end()
   }
 })

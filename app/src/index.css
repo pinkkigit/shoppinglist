@@ -155,3 +155,7 @@
   background-color: #c06014;
   color: white;
 }
+
+.users-lists {
+  display: flex;
+}
