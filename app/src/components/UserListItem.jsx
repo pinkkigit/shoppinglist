@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { List } from "semantic-ui-react";
 
 const UserListItem = ({ list }) => {
@@ -20,10 +21,12 @@ const UserListItem = ({ list }) => {
 
   return (
     <List.Item className="users-lists">
-      <List.Content>
-        <List.Header>{list.name}</List.Header>
-        <List.Description>{joinListItems()}</List.Description>
-      </List.Content>
+      <Link to={`/lists/${list.listId}`}>
+        <List.Content>
+          <List.Header>{list.name}</List.Header>
+          <List.Description>{joinListItems()}</List.Description>
+        </List.Content>
+      </Link>
     </List.Item>
   );
 };

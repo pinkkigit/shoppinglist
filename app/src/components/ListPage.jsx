@@ -46,7 +46,7 @@ const ListPage = () => {
     if (currentUser.user) {
       const user = await userService.getOne(currentUser.user.id);
 
-      const userHasList = user.lists.includes(id);
+      const userHasList = user.lists.some((list) => list._id == id);
       if (!userHasList) {
         const newLists = user.lists.concat(id);
         const newUser = {
@@ -54,11 +54,7 @@ const ListPage = () => {
           id: currentUser.user.id,
           lists: newLists,
         };
-        const updatedUser = await userService.update(
-          currentUser.user.id,
-          newUser
-        );
-        console.log(updatedUser);
+        await userService.update(currentUser.user.id, newUser);
       }
     }
   };
