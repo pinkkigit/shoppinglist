@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Icon, List } from "semantic-ui-react";
 
-const UserListItem = ({ list }) => {
+const UserListItem = ({ list, handleListDelete }) => {
   const joinListItems = () => {
     let firstItems = list.items
       .slice(0, 3)
@@ -29,7 +29,11 @@ const UserListItem = ({ list }) => {
           </Link>
         </div>
         <List.Content className="delete-list-button-content">
-          <Button compact id="delete-list-button">
+          <Button
+            compact
+            id="delete-list-button"
+            onClick={() => handleListDelete(list)}
+          >
             <Icon size="large" name="trash alternate outline" />
           </Button>
         </List.Content>

@@ -28,7 +28,8 @@ listsRouter.get('/:id', async (request, response) => {
 
 listsRouter.delete('/:id', async (request, response) => {
   const id = request.params.id
-  await List.filter(list => list.listId !== id)
+  console.log(id)
+  await List.findByIdAndRemove(id)
 
   response.status(204).end()
 })

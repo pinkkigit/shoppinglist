@@ -5,6 +5,7 @@ import "../index.css";
 import { v4 as uuid } from "uuid";
 import AuthStorageContext from "../contexts/AuthStorageContext";
 import userService from "../services/Users";
+import listService from "../services/Lists";
 import UserListItem from "./UserListItem";
 
 const UserFrontPage = ({ handleLogOut }) => {
@@ -17,6 +18,11 @@ const UserFrontPage = ({ handleLogOut }) => {
       setLists(user.lists);
     }
   }, [currentUser]);
+
+  const handleListDelete = async (list) => {
+    await listService.remove(list._id);
+    setLists(lists.filter((l) => l !== list));
+  };
 
   return (
     <>
@@ -36,7 +42,11 @@ const UserFrontPage = ({ handleLogOut }) => {
           <Header as="h2">My lists</Header>
           <List celled relaxed>
             {lists.map((list) => (
-              <UserListItem key={list.listId} list={list} />
+              <UserListItem
+                key={list.listId}
+                list={list}
+                handleListDelete={handleListDelete}
+              />
             ))}
           </List>
         </>
