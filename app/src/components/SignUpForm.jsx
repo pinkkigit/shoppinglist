@@ -15,6 +15,12 @@ const SignUpForm = () => {
   const currentUser = useContext(AuthStorageContext);
   const history = useHistory();
 
+  useEffect(() => {
+    if (currentUser.user) {
+      history.push("/");
+    }
+  }, []);
+
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 

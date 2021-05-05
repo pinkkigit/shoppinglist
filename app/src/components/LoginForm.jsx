@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Form, Header, Input, Label } from "semantic-ui-react";
 import userService from "../services/Users";
 import loginService from "../services/Login";
@@ -12,6 +12,12 @@ const LoginForm = () => {
 
   const currentUser = useContext(AuthStorageContext);
   const history = useHistory();
+
+  useEffect(() => {
+    if (currentUser.user) {
+      history.push("/");
+    }
+  }, []);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
