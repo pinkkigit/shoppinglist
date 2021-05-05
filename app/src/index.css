@@ -167,3 +167,18 @@
 .users-lists {
   display: flex;
 }
+
+.delete-list-button-content {
+  margin-left: auto;
+  width: 50px;
+}
+
+#delete-list-button {
+  background-color: transparent;
+  color: black;
+}
+
+.user-list-text {
+  margin-left: auto;
+  padding-left: 50px;
+}

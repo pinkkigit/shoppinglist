@@ -19,6 +19,11 @@ const ListPage = () => {
 
   useEffect(async () => {
     try {
+      if (!currentUser.user) {
+        setListName("Shopping list");
+        return;
+      }
+
       const lists = await listService.getAll();
       let thisList = lists.find((list) => list.listId === id);
       if (!thisList) {
@@ -61,6 +66,10 @@ const ListPage = () => {
 
   const handleSubmit = async (itemToAdd) => {
     try {
+      if (!currentUser.user) {
+        setItems(items.concat(itemToAdd));
+        return;
+      }
       const returnedList = await itemService.create(id, itemToAdd);
       setItems(returnedList.items);
     } catch (error) {
@@ -70,6 +79,10 @@ const ListPage = () => {
 
   const handleRemove = async (item) => {
     try {
+      if (!currentUser.user) {
+        setItems(items.filter((i) => i !== item));
+        return;
+      }
       const newItems = items.filter((i) => i.id !== item.id);
       await itemService.remove(id, item.id);
       setItems(newItems);
@@ -80,7 +93,9 @@ const ListPage = () => {
 
   const handleRemoveAll = async () => {
     try {
-      await itemService.removeAll(id);
+      if (currentUser.user) {
+        await itemService.removeAll(id);
+      }
       setItems([]);
     } catch (error) {
       console.log("error", error);
@@ -89,7 +104,9 @@ const ListPage = () => {
 
   const handleRemoveChecked = async () => {
     try {
-      await itemService.removeMany(id);
+      if (currentUser.user) {
+        await itemService.removeMany(id);
+      }
       setItems(items.filter((i) => !i.checked));
     } catch (error) {
       console.log("error", error);
@@ -98,8 +115,11 @@ const ListPage = () => {
 
   const handleNameClick = async (item) => {
     try {
-      console.log(item.id);
       const updatedItem = { ...item, checked: !item.checked };
+      if (!currentUser.user) {
+        setItems(items.map((i) => (i === item ? updatedItem : i)));
+        return;
+      }
       const returnedList = await itemService.update(id, item.id, updatedItem);
       setItems(returnedList.items);
     } catch (error) {
@@ -114,6 +134,10 @@ const ListPage = () => {
 
     try {
       const updatedItem = { ...item, quantity: newQuantity };
+      if (!currentUser.user) {
+        setItems(items.map((i) => (i === item ? updatedItem : i)));
+        return;
+      }
       const returnedList = await itemService.update(id, item.id, updatedItem);
       setItems(returnedList.items);
     } catch (error) {
@@ -123,6 +147,9 @@ const ListPage = () => {
 
   const handleNameChange = async () => {
     setIsChangingName(!isChangingName);
+    if (!currentUser.user) {
+      return;
+    }
 
     if (isChangingName) {
       try {
