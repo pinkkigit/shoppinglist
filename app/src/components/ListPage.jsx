@@ -6,67 +6,93 @@ import itemService from "../services/Items";
 import userService from "../services/Users";
 import { useRouteMatch } from "react-router";
 import AuthStorageContext from "../contexts/AuthStorageContext";
+import Alert from "./Alert";
 
-const ListPage = () => {
+const ListPage = ({ user }) => {
   const [isChangingName, setIsChangingName] = useState(false);
   const [listName, setListName] = useState("");
   const [items, setItems] = useState([]);
-
-  const currentUser = useContext(AuthStorageContext);
+  const [list, setList] = useState(null);
+  const [thisUser, setThisUser] = useState(null);
+  const [isMyList, setIsMyList] = useState(false);
 
   const match = useRouteMatch("/lists/:id");
   const id = match.params.id;
 
   useEffect(async () => {
-    try {
-      if (!currentUser.user) {
-        setListName("Shopping list");
-        return;
-      }
+    const lists = await listService.getAll();
+    const thisList = lists.find((list) => list.listId === id);
+    setList(thisList);
 
-      const lists = await listService.getAll();
-      let thisList = lists.find((list) => list.listId === id);
-      if (!thisList) {
-        thisList = await listService.create({
+    if (user) {
+      setThisUser(await userService.getOne(user.id));
+    }
+
+    if (user && !thisList) {
+      setList(
+        await listService.create({
           listId: id,
           items: [],
           name: "Shopping list",
-        });
-        setListName("Shopping list");
-      } else {
-        setListName(thisList.name);
-      }
+        })
+      );
+    }
+  }, [user]);
 
+  useEffect(async () => {
+    if (list) {
+      setListName(list.name);
       const allItems = await itemService.getAll(id);
       if (allItems) {
         setItems(allItems);
       }
-      addListToUser(thisList._id);
-    } catch (error) {
-      console.log("error loading items", error);
+    } else {
+      setListName("Shopping list");
     }
-  }, []);
+
+    if (list && list.users.length <= 1) {
+      addListToUser(list._id);
+    }
+
+    if (list && user) {
+      if (list.users.includes(user.id)) {
+        setIsMyList(true);
+      }
+    }
+  }, [list]);
 
   const addListToUser = async (id) => {
-    if (currentUser.user) {
-      const user = await userService.getOne(currentUser.user.id);
-
-      const userHasList = user.lists.some((list) => list._id == id);
+    if (thisUser) {
+      const userHasList = thisUser.lists.some((list) => list._id == id);
       if (!userHasList) {
-        const newLists = user.lists.concat(id);
+        const newLists = thisUser.lists.concat(id);
         const newUser = {
-          username: currentUser.user.username,
-          id: currentUser.user.id,
+          username: thisUser.username,
+          id: thisUser.id,
           lists: newLists,
         };
-        await userService.update(currentUser.user.id, newUser);
+        await userService.update(thisUser.id, newUser);
+        addUserToList();
+      }
+    }
+  };
+
+  const addUserToList = async () => {
+    if (user && list) {
+      if (!list.users.find((u) => u.id === user.id)) {
+        const updatedList = {
+          ...list,
+          users: list.users.concat(user.id),
+        };
+        const result = await listService.update(id, updatedList);
+        setIsMyList(true);
       }
     }
   };
 
   const handleSubmit = async (itemToAdd) => {
     try {
-      if (!currentUser.user) {
+      if (!user) {
         setItems(items.concat(itemToAdd));
         return;
       }
@@ -79,7 +105,7 @@ const ListPage = () => {
 
   const handleRemove = async (item) => {
     try {
-      if (!currentUser.user) {
+      if (!user) {
         setItems(items.filter((i) => i !== item));
         return;
       }
@@ -93,7 +119,7 @@ const ListPage = () => {
 
   const handleRemoveAll = async () => {
     try {
-      if (currentUser.user) {
+      if (user) {
         await itemService.removeAll(id);
       }
       setItems([]);
@@ -104,7 +130,7 @@ const ListPage = () => {
 
   const handleRemoveChecked = async () => {
     try {
-      if (currentUser.user) {
+      if (user) {
         await itemService.removeMany(id);
       }
       setItems(items.filter((i) => !i.checked));
@@ -116,7 +142,7 @@ const ListPage = () => {
   const handleNameClick = async (item) => {
     try {
       const updatedItem = { ...item, checked: !item.checked };
-      if (!currentUser.user) {
+      if (!user) {
         setItems(items.map((i) => (i === item ? updatedItem : i)));
         return;
       }
@@ -134,7 +160,7 @@ const ListPage = () => {
 
     try {
       const updatedItem = { ...item, quantity: newQuantity };
-      if (!currentUser.user) {
+      if (!user) {
         setItems(items.map((i) => (i === item ? updatedItem : i)));
         return;
       }
@@ -147,7 +173,7 @@ const ListPage = () => {
 
   const handleNameChange = async () => {
     setIsChangingName(!isChangingName);
-    if (!currentUser.user) {
+    if (!user) {
       return;
     }
 
@@ -166,8 +192,18 @@ const ListPage = () => {
     }
   };
 
+  const handleAddToMyLists = async () => {
+    addListToUser(list._id);
+  };
+
   return (
     <>
+      {!user && (
+        <Alert
+          color="brown"
+          message="You are not signed in. Any changes made to the list will not be saved!"
+        />
+      )}
       <div className="header-flex">
         {isChangingName ? (
           <Form onSubmit={handleNameChange} className="header-edit-div">
@@ -193,6 +229,16 @@ const ListPage = () => {
           </>
         )}
       </div>
+      {!isMyList ? (
+        <Button
+          compact
+          id="add-to-my-lists-button"
+          onClick={handleAddToMyLists}
+        >
+          <Icon name="add" />
+          Add to my lists
+        </Button>
+      ) : null}
       <Divider />
       <Itemlist
         items={items}

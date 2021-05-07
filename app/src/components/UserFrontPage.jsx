@@ -20,8 +20,27 @@ const UserFrontPage = ({ handleLogOut }) => {
   }, [currentUser]);
 
   const handleListDelete = async (list) => {
-    await listService.remove(list._id);
-    setLists(lists.filter((l) => l !== list));
+    const updatedLists = lists.filter((l) => l !== list);
+    const newUser = {
+      username: currentUser.user.username,
+      id: currentUser.user.id,
+      lists: updatedLists,
+    };
+    await userService.update(currentUser.user.id, newUser);
+
+    const updatedListUsers = list.users.filter(
+      (u) => u !== currentUser.user.id
+    );
+
+    if (updatedListUsers.length === 0) {
+      await listService.remove(list.listId);
+    } else {
+      await listService.update(list.listId, {
+        ...list,
+        users: updatedListUsers,
+      });
+    }
+    setLists(updatedLists);
   };
 
   return (

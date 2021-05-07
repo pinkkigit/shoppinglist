@@ -170,7 +170,7 @@
 
 .delete-list-button-content {
   margin-left: auto;
-  width: 50px;
+  width: 30px;
 }
 
 #delete-list-button {
@@ -180,5 +180,11 @@
 
 .user-list-text {
   margin-left: auto;
-  padding-left: 50px;
+  padding-left: 30px;
+}
+
+#add-to-my-lists-button {
+  background-color: #424642;
+  color:white;
+  margin-top: 10px;
 }

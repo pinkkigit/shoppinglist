@@ -28,7 +28,13 @@ const listSchema = mongoose.Schema({
   items: [itemSchema],
   listId: {
     type: String
-  }
+  },
+  users: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ]
 })
 
 listSchema.plugin(uniqueValidator)

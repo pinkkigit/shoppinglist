@@ -29,17 +29,17 @@ listsRouter.get('/:id', async (request, response) => {
 listsRouter.delete('/:id', async (request, response) => {
   const id = request.params.id
   console.log(id)
-  await List.findByIdAndRemove(id)
+  await List.findOneAndRemove({listId: id})
 
   response.status(204).end()
 })
 
 listsRouter.post('/', async (request, response) => {
-  const token = getTokenFrom(request)
-  const decodedToken = jwt.verify(token, process.env.SECRET)
-  if (!token || !decodedToken.id) {
-    return response.status(401).json({error: 'token missing or invalid'})
-  }
+  // const token = getTokenFrom(request)
+  // const decodedToken = jwt.verify(token, process.env.SECRET)
+  // if (!token || !decodedToken.id) {
+  //   return response.status(401).json({error: 'token missing or invalid'})
+  // }
   const list = new List({
     ...request.body
   })
@@ -50,7 +50,7 @@ listsRouter.post('/', async (request, response) => {
 listsRouter.put('/:id', async (request, response) => {
   try {
     const id = request.params.id
-    const list = await List.findOneAndUpdate({listId: id}, {name: request.body.name})
+    const list = await List.findOneAndUpdate({listId: id}, request.body)
   
     response.json(list);
 

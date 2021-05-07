@@ -35,7 +35,7 @@ const App = () => {
           <Switch>
             <Route path="/lists/:id">
               <Container className="main-container" textAlign="center">
-                <ListPage />
+                <ListPage user={user} />
               </Container>
             </Route>
             <Route path="/signup">
