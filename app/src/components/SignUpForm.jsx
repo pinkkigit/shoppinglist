@@ -1,16 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button, Header } from "semantic-ui-react";
+import { Header, Label } from "semantic-ui-react";
 import { Formik } from "formik";
-import {
-  Form,
-  FormikDebug,
-  Input,
-  SubmitButton,
-} from "formik-semantic-ui-react";
+import { Form, Input, SubmitButton } from "formik-semantic-ui-react";
 import * as yup from "yup";
 import userService from "../services/Users";
 import useSignIn from "../hooks/useSignIn";
-import Alert from "./Alert";
 import { useHistory } from "react-router";
 import AuthStorageContext from "../contexts/AuthStorageContext";
 
@@ -36,12 +30,12 @@ const initialValues = {
   passwordConfirmation: "",
 };
 
-const SignUpForm = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState("");
+const isUsernameTaken = async (username) => {
+  const users = await userService.getAll();
+  return users.find((user) => user.username === username);
+};
 
+const SignUpForm = () => {
   const currentUser = useContext(AuthStorageContext);
   const history = useHistory();
 
@@ -51,29 +45,27 @@ const SignUpForm = () => {
     }
   }, []);
 
-  const handleFormSubmit = async () => {
-    //event.preventDefault();
-
-    // if (password !== confirmPassword) {
-    //   setMessage("Passwords don't match");
-    //   return;
-    // }
-
+  const handleFormSubmit = async (values, { setStatus }) => {
     try {
-      await userService.create({ username, password });
-      const user = await useSignIn({ username, password });
-      currentUser.setCurrentUser(user);
-      history.push("/");
-      console.log("sign up successful", user);
+      const isTaken = await isUsernameTaken(values.username);
+      if (isTaken) {
+        setStatus({ error: "Username already taken" });
+
+        setTimeout(() => {
+          setStatus({});
+        }, 5000);
+      } else {
+        await userService.create(values);
+        const user = await useSignIn(values);
+        currentUser.setCurrentUser(user);
+        history.push("/");
+        console.log("sign up successful", user);
+      }
     } catch (error) {
       console.log(error);
-      setMessage("Username taken");
-
-      setTimeout(() => {
-        setMessage("");
-      }, 5000);
     }
   };
+
   return (
     <>
       <Header as="h2">Sign up</Header>
@@ -82,40 +74,41 @@ const SignUpForm = () => {
         onSubmit={handleFormSubmit}
         validationSchema={SignUpSchema}
       >
-        <Form>
-          <Input
-            label="Username:"
-            id="login-inputs"
-            type="text"
-            name="username"
-            value={username}
-            errorPrompt
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <Input
-            label="Password:"
-            id="login-inputs"
-            type="password"
-            name="password"
-            value={password}
-            errorPrompt
-            autoComplete="off"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Input
-            label="Confirm password:"
-            id="login-inputs"
-            type="password"
-            name="passwordConfirmation"
-            value={confirmPassword}
-            errorPrompt
-            autoComplete="off"
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-          <SubmitButton id="primary-button" type="submit" value="Submit">
-            Sign up
-          </SubmitButton>
-        </Form>
+        {({ status }) => (
+          <Form>
+            <Input
+              label="Username:"
+              id="login-inputs"
+              type="text"
+              name="username"
+              errorPrompt
+            />
+            <Input
+              label="Password:"
+              id="login-inputs"
+              type="password"
+              name="password"
+              errorPrompt
+              autoComplete="off"
+            />
+            <Input
+              label="Confirm password:"
+              id="login-inputs"
+              type="password"
+              name="passwordConfirmation"
+              errorPrompt
+              autoComplete="off"
+            />
+            {status.error && (
+              <Label basic color="red" id="signup-username-taken" size="large">
+                {status.error}
+              </Label>
+            )}
+            <SubmitButton id="primary-button" type="submit" value="Submit">
+              Sign up
+            </SubmitButton>
+          </Form>
+        )}
       </Formik>
     </>
   );

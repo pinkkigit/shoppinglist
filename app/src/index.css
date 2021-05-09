@@ -188,3 +188,7 @@
   color:white;
   margin-top: 10px;
 }
+
+#signup-username-taken {
+  margin-bottom: 10px;
+}
