@@ -49,7 +49,7 @@ const SignUpForm = () => {
     return !users.find((user) => user.username === username);
   };
 
-  const handleFormSubmit = async (values, { setStatus }) => {
+  const handleFormSubmit = async (values) => {
     try {
       await userService.create(values);
       const user = await useSignIn(values);
