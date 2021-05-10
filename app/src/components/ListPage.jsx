@@ -201,7 +201,7 @@ const ListPage = ({ user }) => {
       {!user && (
         <Alert
           color="brown"
-          message="You are not signed in. Any changes made to the list will not be saved!"
+          message="You are not signed in. Any changes made to the list won't be saved!"
         />
       )}
       <div className="header-flex">
@@ -229,7 +229,7 @@ const ListPage = ({ user }) => {
           </>
         )}
       </div>
-      {!isMyList ? (
+      {thisUser && !isMyList ? (
         <Button
           compact
           id="add-to-my-lists-button"
