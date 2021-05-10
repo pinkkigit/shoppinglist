@@ -99,7 +99,7 @@ const SignUpForm = () => {
               errorPrompt
               autoComplete="off"
             />
-            {status.error && (
+            {status && status.error && (
               <Label basic color="red" id="signup-username-taken" size="large">
                 {status.error}
               </Label>
