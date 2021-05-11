@@ -26,6 +26,7 @@ mongoose.connect(config.MONGODB_URI, {
 app.use(cors())
 app.use(express.json())
 app.use(middleware.requestLogger)
+app.use(express.static('build'))
 
 
 app.use('/api/users', usersRouter);
@@ -36,7 +37,7 @@ app.use('/api/login', loginRouter);
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

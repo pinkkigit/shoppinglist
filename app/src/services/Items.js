@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "http://localhost:3001/api/lists";
+const baseUrl = "/api/lists";
 
 const getAll = (id, itemId) => {
   const request = axios.get(`${baseUrl}/${id}/items`);
